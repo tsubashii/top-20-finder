@@ -21,8 +21,8 @@ i.large.material-icons {
     font-size: 50px;
 }
 
-/* movie card styling */
-.movie-card {
+/* Movie Card + Show Card styling */
+.movie-card .show-card .person-card {
     height: 50vh;
     width: 100%;
     margin: 5px 0;
@@ -31,8 +31,8 @@ i.large.material-icons {
     color: #F2F2F2; */
 }
 
-.movie-card img {
-    height: 50vh;
+.movie-card img, .show-card img, .person-card img {
+    height: 45vh;
     width: 100%;
     margin-bottom: 5px;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.9);

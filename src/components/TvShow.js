@@ -5,41 +5,41 @@ import '../App.css'
 const imgURL = 'http://image.tmdb.org/t/p/original';
 const myApiKey = process.env.REACT_APP_TOP_TWENTY_FINDER_API_KEY;
 
-class Movie extends React.Component {
+class TvShow extends React.Component {
     constructor(props) {
         super(props);
         
         this.state = {
-            movies : []
+            shows : []
         }
     }
 
     componentDidMount() {
         // load data
-        axios.get("https://api.themoviedb.org/3/movie/popular?api_key="+myApiKey+'&language=en-US&page=1')
+        axios.get("https://api.themoviedb.org/3/tv/popular?api_key="+myApiKey+'&language=en-US&page=1')
           .then(response => {
             console.log(response.data);
             this.setState({ 
-              movies: response.data.results
+              shows: response.data.results
             });
           })  
       }
 
     render() {
-        // iterate over movies and display in a grid
-        const movies= this.state.movies.map((movie, index)=> {
+        // iterate over shows and display in a grid
+        const shows= this.state.shows.map((show, index)=> {
             return(
-                <div className="movie-card col s4 m6 l3" key={ index }>
-                    <a href="#!"><img src={ imgURL + movie.poster_path } alt='movie poster'></img></a>
-                    {/*<p>{ movie.original_title }</p>
-                    <p>Rating: { movie.vote_average }/10</p>*/}
+                <div className="show-card col s4 m6 l3" key={ index }>
+                    <a href="#!"><img src={ imgURL + show.poster_path } alt='tv show poster'></img></a>
+                    {/*<p>{ show.original_title }</p>
+                    <p>Rating: { show.vote_average }/10</p>*/}
                 </div>
             )
         });
         return(
             <div className='container main-container'>
                 <div className="row">
-                { movies }
+                { shows }
                 </div>
             </div>
         )
@@ -47,4 +47,4 @@ class Movie extends React.Component {
 
 }
 
-export default Movie;
+export default TvShow;
