@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import '../App.css'
+import '../App.css';
 
 const imgURL = 'http://image.tmdb.org/t/p/original';
 const myApiKey = process.env.REACT_APP_TOP_TWENTY_FINDER_API_KEY;
 
 class People extends React.Component {
+    _isMounted = false; // to prevent no-op/ memory leak -- class field that holds the lifecycle state of your component, to prevent this.setState() being called 
+
     constructor(props) {
         super(props);
         
@@ -15,15 +17,24 @@ class People extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         // load data
         axios.get("https://api.themoviedb.org/3/person/popular?api_key="+myApiKey+'&language=en-US&page=1')
-          .then(response => {
+        .then(response => {
             console.log(response.data);
-            this.setState({ 
-              people: response.data.results
-            });
-          })  
-      }
+            // avoid calling this.setState() on your component instance if component already unmounted
+            // if (this._isMounted) {
+                this.setState({ 
+                  people: response.data.results
+                });
+            // }
+        })  
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
 
     render() {
         // iterate over people and display in a grid
