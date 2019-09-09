@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../App.css';
 import Modal from 'react-responsive-modal';
 import { imgURL, myApiKey, personPopular } from './api/APIUtils';
+import SearchArea from './SearchArea';
 
 class People extends React.Component {
     _isMounted = false; // to prevent no-op/ memory leak -- class field that holds the lifecycle state of your component, to prevent this.setState() being called 
@@ -13,25 +14,42 @@ class People extends React.Component {
         this.state = {
             people : [],
             open: false,
-            selectedPerson: null // keep track of selected Item
+            selectedPerson: null, // keep track of selected Item
+            searchTerm: []
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
-
+    
     componentDidMount() {
         this._isMounted = true;
         // load data
         axios.get(personPopular+myApiKey+'&language=en-US&page=1')
         .then(response => {
-            console.log(response.data);
-            // avoid calling this.setState on your component instance if component already unmounted
+            // to avoid calling this.setState on your component instance if component already unmounted
             if (this._isMounted) {
                 this.setState({ 
-                  people: response.data.results
+                    people: response.data.results
                 });
             }
-        })  
+        })
     }
 
+    handleSubmit =(event) => {
+        event.preventDefault();
+        axios.get(`https://api.themoviedb.org/3/search/person?api_key=${myApiKey}&query=${this.state.searchTerm}`)
+        .then(response => {
+            console.log(response.data);
+            this.setState({
+                searchTerm: response.data.results
+            });
+        })
+    }
+
+    handleChange = (event) => {
+        this.setState({ searchTerm: event.target.value })
+    }
+    
     componentWillUnmount() {
         this._isMounted = false;
     }
@@ -82,10 +100,30 @@ class People extends React.Component {
                 </div>
             )
         });
+
+        // Search not working atm
+        // const searchTerm = this.state.searchTerm.map((person, index)=> {
+        //     return(
+        //         <div className="person-card col s4 m6 l3" key={ index }>
+        //             <a href="#!" onClick={() => this.onOpenModal(index)}>
+        //                 <img src={ imgURL + person.profile_path } 
+        //                     alt='person poster'>
+        //                 </img>
+        //             </a>
+        //             <Modal open={open} onClose={this.onCloseModal} animationDuration={500} center>
+        //                 <div>{this.renderModal()}</div>
+        //             </Modal>
+        //         </div>
+        //     )
+        // });
+
+
         return(
             <div className='container main-container'>
+                <SearchArea handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
                 <div className="row">
                     { people }
+                    {/*{ searchTerm }*/}
                 </div>
             </div>
         )
