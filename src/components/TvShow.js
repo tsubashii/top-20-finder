@@ -41,8 +41,6 @@ class Tvshow extends React.Component {
             return(
                 <div className="show-card col s4 m6 l3" key={ index }>
                     <a href="#!"><img src={ imgURL + show.poster_path } alt='tv show poster'></img></a>
-                    {/*<p>{ show.original_title }</p>
-                    <p>Rating: { show.vote_average }/10</p>*/}
                 </div>
             )
         });

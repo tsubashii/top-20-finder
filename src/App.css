@@ -12,6 +12,10 @@
     margin-top: 5px;
 }
 
+.text-color {
+    color: #ffffff;
+}
+
 /* homepage styling */
 .homepage {
     height: 100vh;

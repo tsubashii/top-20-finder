@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import '../App.css';
+import Modal from 'react-responsive-modal';
 
 const imgURL = 'http://image.tmdb.org/t/p/original';
 const myApiKey = process.env.REACT_APP_TOP_TWENTY_FINDER_API_KEY;
@@ -12,7 +13,9 @@ class People extends React.Component {
         super(props);
         
         this.state = {
-            people : []
+            people : [],
+            open: false,
+            selectedPerson: null // keep track of selected Item
         }
     }
 
@@ -22,12 +25,12 @@ class People extends React.Component {
         axios.get("https://api.themoviedb.org/3/person/popular?api_key="+myApiKey+'&language=en-US&page=1')
         .then(response => {
             console.log(response.data);
-            // avoid calling this.setState() on your component instance if component already unmounted
-            // if (this._isMounted) {
+            // avoid calling this.setState on your component instance if component already unmounted
+            if (this._isMounted) {
                 this.setState({ 
                   people: response.data.results
                 });
-            // }
+            }
         })  
     }
 
@@ -35,15 +38,49 @@ class People extends React.Component {
         this._isMounted = false;
     }
 
+    onOpenModal = i => {
+        this.setState({ 
+            open: true,
+            selectedPerson: i // when Item is clicked, mark as selected
+         });
+    }
+
+    onCloseModal = () => {
+        this.setState({ open: false });
+    }
+
+    renderModal = () => {
+        // check to see if there's a selected item/post/person. If so, render it.
+        if (this.state.selectedPerson !== null) {
+            const person = this.state.people[this.state.selectedPerson];
+            return (
+                <div style={{ width: 400, height: 400, backgroundColor: "white" }}>
+                    <img src={ imgURL + person.profile_path } 
+                        style={{ width: 150, height: 230 }} alt='person poster'>
+                    </img>
+                    <h5>Name: {person.name}</h5>
+                    <p>Gender: { ((person.gender) === 2) ? <span>Male</span> : <span>Female</span> }</p>
+                    <p>Known for: { person.known_for_department}</p>
+                    <p>Rating: { person.popularity }</p>
+                </div>
+            );
+        }
+    }
 
     render() {
+        const { open } = this.state;
         // iterate over people and display in a grid
         const people = this.state.people.map((person, index)=> {
             return(
                 <div className="person-card col s4 m6 l3" key={ index }>
-                    <a href="#!"><img src={ imgURL + person.profile_path } alt='person poster'></img></a>
-                    {/*<p>{ person.name }</p>
-                    <p>Rating: { person.popularity }/10</p>*/}
+                    <a href="#!" onClick={() => this.onOpenModal(index)}>
+                        <img src={ imgURL + person.profile_path } 
+                            alt='person poster'>
+                        </img>
+                    </a>
+                    <Modal open={open} onClose={this.onCloseModal} animationDuration={500} center>
+                        <div>{this.renderModal()}</div>
+                    </Modal>
                 </div>
             )
         });
