@@ -21,15 +21,24 @@ These should be split into separate categories that you can switch between;
 - TV Shows
 - People
 
-
-
 When you click on an item, open a modal to show details related to that item.
 
-
-
+---
 
 ## To run the project locally
+
+
+
+> This applications was made with the help of
+* ``` create-react-app ```
+* ``` react-router ```
+* ``` react-responsive-modal ```
+* ``` materializecss ```
+
+---
+
 #### You’ll need to have Node 8.16.0 or Node 10.16.0 or later version on your local development machine
+
 
 - Press the Green button that says Clone or Download, on the top right corner
 
